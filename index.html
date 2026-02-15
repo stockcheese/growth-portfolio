@@ -464,12 +464,153 @@ body {
 }
 .footer .warn { color: var(--amber); margin-top: 8px; }
 
+/* ═══════════ EVENT CALENDAR ═══════════ */
+.cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.cal-header h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px; font-weight: 600;
+  color: var(--text-bright);
+}
+.cal-nav {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  color: var(--text-dim);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.cal-nav:hover { color: var(--accent-1); border-color: var(--accent-1); }
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.cal-day-header {
+  background: var(--surface-2);
+  padding: 10px 4px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-dim);
+}
+.cal-cell {
+  background: var(--surface);
+  padding: 10px 8px;
+  min-height: 64px;
+  position: relative;
+  cursor: default;
+  transition: background 0.15s;
+}
+.cal-cell.has-events { cursor: pointer; }
+.cal-cell.has-events:hover { background: var(--surface-2); }
+.cal-cell.today { box-shadow: inset 0 0 0 1px var(--accent-1); }
+.cal-cell.selected { background: var(--surface-3); }
+.cal-cell.empty { background: var(--bg); opacity: 0.5; }
+.cal-cell .day-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-dim);
+}
+.cal-cell.has-events .day-num { color: var(--text-bright); }
+.cal-dots {
+  display: flex; gap: 3px; flex-wrap: wrap;
+  margin-top: 6px;
+}
+.cal-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+}
+.cal-dot.dot-green { background: var(--green); }
+.cal-dot.dot-amber { background: var(--amber); }
+.cal-dot.dot-cyan { background: var(--accent-2); }
+.cal-dot.dot-purple { background: var(--accent-3); }
+.cal-dot.dot-red { background: var(--red); }
+
+.cal-legend {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-top: 16px;
+  font-size: 11px; color: var(--text-dim);
+}
+.cal-legend-item { display: flex; align-items: center; gap: 5px; }
+.cal-legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cal-detail-panel {
+  margin-top: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  display: none;
+}
+.cal-detail-panel.visible { display: block; }
+.cal-detail-panel h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--text-dim);
+  margin-bottom: 12px;
+}
+.cal-event-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(27,34,48,0.4);
+  font-size: 14px;
+}
+.cal-event-item:last-child { border-bottom: none; }
+.cal-event-item .ev-company {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 600;
+  margin-right: 8px;
+}
+.cal-event-item .ev-title { color: var(--text-bright); font-weight: 600; }
+.cal-event-item .ev-desc { color: var(--text-dim); margin-top: 4px; font-size: 13px; }
+
+.cal-upcoming {
+  margin-top: 24px;
+}
+.cal-upcoming h4 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--accent-2); font-weight: 700; margin-bottom: 12px;
+}
+.cal-upcoming-item {
+  display: flex; gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(27,34,48,0.3);
+  font-size: 14px;
+}
+.cal-upcoming-item:last-child { border-bottom: none; }
+.cal-upcoming-date {
+  flex-shrink: 0; width: 90px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 500;
+  color: var(--accent-1);
+}
+.cal-upcoming-text { flex: 1; }
+.cal-upcoming-text strong { color: var(--text-bright); }
+
 @media (max-width: 900px) {
   .hero h1 { font-size: 34px; }
   .company-name { font-size: 28px; }
   .section-header { font-size: 26px; }
   .overview-table { display: block; overflow-x: auto; }
   .snap-grid { grid-template-columns: repeat(3, 1fr); }
+  .cal-cell { min-height: 48px; padding: 6px 4px; }
+  .cal-cell .day-num { font-size: 11px; }
+  .cal-dots { margin-top: 3px; }
+  .cal-dot { width: 5px; height: 5px; }
 }
 </style>
 <style>
@@ -587,6 +728,11 @@ body {
     <a href="#head2head" class="nav-link">Head-to-Head</a>
     <a href="#catalysts" class="nav-link">Catalysts</a>
     <a href="#allocation" class="nav-link">Allocation</a>
+    <a href="#space-defense" class="nav-link" style="border-left:2px solid var(--accent-3);margin-left:8px;padding-left:16px;">Space & Defense</a>
+    <a href="#irdm" class="nav-link conviction">Iridium</a>
+    <a href="#lhx" class="nav-link conviction">L3Harris</a>
+    <a href="#mtrn" class="nav-link speculative">Materion</a>
+    <a href="#events-calendar" class="nav-link">Calendar</a>
     <a href="#slot" class="nav-link" style="opacity:0.5;">+ Next Stock</a>
   </div>
 </nav>
@@ -703,6 +849,42 @@ body {
         <td class="mono r">4</td>
         <td class="mono r">2.0/10</td>
         <td><span class="verdict-badge badge-avoid">Do Not Buy</span></td>
+      </tr>
+      <tr>
+        <td colspan="9" style="background:var(--surface-2); padding:10px 16px; font-family:'Playfair Display',serif; font-size:14px; color:var(--accent-3); border:1px solid var(--border);">Hunting Ground #2 — Space & Defense Moats</td>
+      </tr>
+      <tr>
+        <td><strong>Iridium Communications</strong></td>
+        <td class="ticker c">IRDM</td>
+        <td class="mono">$18.46</td>
+        <td class="mono">$2.24B</td>
+        <td class="mono">$802.6M</td>
+        <td class="mono g">$42.4M</td>
+        <td class="mono">~900</td>
+        <td class="mono g">7.5/10</td>
+        <td><span class="verdict-badge badge-buy">Conviction Buy</span></td>
+      </tr>
+      <tr>
+        <td><strong>L3Harris Technologies</strong></td>
+        <td class="ticker c">LHX</td>
+        <td class="mono">$339.90</td>
+        <td class="mono">$65.8B</td>
+        <td class="mono">$21.9B</td>
+        <td class="mono g">$1.61B</td>
+        <td class="mono">~50,000</td>
+        <td class="mono g">7.0/10</td>
+        <td><span class="verdict-badge badge-hold">Staged Buy</span></td>
+      </tr>
+      <tr>
+        <td><strong>Materion Corporation</strong></td>
+        <td class="ticker a">MTRN</td>
+        <td class="mono">$159.68</td>
+        <td class="mono">$3.31B</td>
+        <td class="mono">$1.79B</td>
+        <td class="mono g">$74.2M</td>
+        <td class="mono">~3,000</td>
+        <td class="mono a">6.5/10</td>
+        <td><span class="verdict-badge badge-hold">Buy on Dip</span></td>
       </tr>
     </tbody>
   </table>
@@ -1170,21 +1352,25 @@ body {
 <!-- ═══════════════════════════════════════════ -->
 <div class="company-section" id="catalysts">
   <h2 class="section-header">Master Catalyst Timeline</h2>
-  <p class="section-sub">Every key date across all five positions. Calendar events that will move prices.</p>
+  <p class="section-sub">Every key date across all positions. Calendar events that will move prices.</p>
 
   <div class="info-block" style="margin-bottom:24px;">
     <h4 style="color:var(--red);">February 2026 — Imminent</h4>
     <div class="catalyst-item"><div class="cat-date">Feb 12</div><div class="cat-text"><strong>USAR</strong> — Analyst & Investor Webinar. Stillwater commissioning update.</div></div>
+    <div class="catalyst-item"><div class="cat-date">Feb 12</div><div class="cat-text"><strong class="p">MTRN</strong> — Q4/FY2025 Earnings <span class="g">✓ REPORTED</span>. Revenue beat ($489.7M vs $448.8M est). Slight EPS miss ($1.53 vs $1.60). $65M defense prime beryllium investment announced. Stock surged 8.85%.</div></div>
     <div class="catalyst-item"><div class="cat-date">Feb 19</div><div class="cat-text"><strong>MP</strong> — Q4/FY2025 Earnings. <span class="g">Expect first profitable quarter</span> as price floor payments commence. Magnetics segment revenue ramp.</div></div>
+    <div class="catalyst-item"><div class="cat-date">Feb 19</div><div class="cat-text"><strong class="p">MTRN</strong> — Ex-dividend date ($0.14/share quarterly).</div></div>
     <div class="catalyst-item"><div class="cat-date">Feb 25</div><div class="cat-text"><strong>UUUU</strong> — Q4/FY2025 Earnings. Uranium production update, Vara Mada negotiation status, heavy REE pilot progress.</div></div>
     <div class="catalyst-item"><div class="cat-date">Feb 25</div><div class="cat-text"><strong>CRML</strong> — Next earnings. Tanbreez pilot plant progress, DFS status.</div></div>
     <div class="catalyst-item"><div class="cat-date">Feb 25</div><div class="cat-text"><strong>USAR</strong> — Q4/FY2025 Earnings. Stillwater commissioning progress report.</div></div>
+    <div class="catalyst-item"><div class="cat-date">Feb 25</div><div class="cat-text"><strong class="p">LHX</strong> — <span class="c">Investor Day, New York City.</span> First detailed 3-segment presentation. Missile Solutions IPO timeline. Golden Dome strategy. Critical for entry timing.</div></div>
   </div>
 
   <div class="info-block" style="margin-bottom:24px;">
     <h4 style="color:var(--amber);">March 2026 — Binary Events</h4>
     <div class="catalyst-item"><div class="cat-date">Mar 2</div><div class="cat-text"><strong>LYSCF</strong> — <span class="a">Malaysia Kuantan licence renewal decision.</span> Binary event. Kalgoorlie mitigates but transition takes 12-18 months.</div></div>
     <div class="catalyst-item"><div class="cat-date">Mar 4</div><div class="cat-text"><strong>LYSCF</strong> — Half-year results + updated guidance. New CEO strategy direction.</div></div>
+    <div class="catalyst-item"><div class="cat-date">Mar 6</div><div class="cat-text"><strong class="p">MTRN</strong> — Dividend payment ($0.14/share quarterly).</div></div>
     <div class="catalyst-item"><div class="cat-date">Mar 31</div><div class="cat-text"><strong>USAR</strong> — <span class="a">Commerce Department LOI closing deadline.</span> Non-binding → binding. If falls through, thesis collapses.</div></div>
   </div>
 
@@ -1193,6 +1379,8 @@ body {
     <div class="catalyst-item"><div class="cat-date">Q1 2026</div><div class="cat-text"><strong>USAR</strong> — <span class="g">Stillwater magnet factory commercial commissioning.</span> THE make-or-break moment for USAR thesis.</div></div>
     <div class="catalyst-item"><div class="cat-date">Q1 2026</div><div class="cat-text"><strong>UUUU</strong> — Donald JV Updated Feasibility Study + FID decision (Australia).</div></div>
     <div class="catalyst-item"><div class="cat-date">H1 2026</div><div class="cat-text"><strong>MP</strong> — Independence facility full-scale magnet production ramp. Heavy REE separation commissioning at Mountain Pass.</div></div>
+    <div class="catalyst-item"><div class="cat-date">Apr 23</div><div class="cat-text"><strong class="p">LHX</strong> — Q1 2026 Earnings. First quarter under new 3-segment reporting. Key for margin visibility.</div></div>
+    <div class="catalyst-item"><div class="cat-date">Mid 2026</div><div class="cat-text"><strong class="p">IRDM</strong> — <span class="c">ASIC chip (8mm) commercial availability.</span> Enables mass-market PNT device integration. Key adoption catalyst.</div></div>
     <div class="catalyst-item"><div class="cat-date">Jun 2026</div><div class="cat-text"><strong>UUUU</strong> — ASM Acquisition close (shareholder vote, FIRB approval). 5.8% dilution.</div></div>
   </div>
 
@@ -1200,13 +1388,55 @@ body {
     <h4 style="color:var(--accent-3);">H2 2026 — 2028</h4>
     <div class="catalyst-item"><div class="cat-date">H2 2026</div><div class="cat-text"><strong>USAR</strong> — Round Top Pre-Feasibility Study completion.</div></div>
     <div class="catalyst-item"><div class="cat-date">H2 2026</div><div class="cat-text"><strong>MP</strong> — First Apple shipments. Commercial magnet revenue begins.</div></div>
+    <div class="catalyst-item"><div class="cat-date">H2 2026</div><div class="cat-text"><strong class="p">IRDM</strong> — <span class="c">NTN Direct (narrowband) launch</span> via Qualcomm partnership. Smartphone-to-satellite messaging. IoT expansion.</div></div>
+    <div class="catalyst-item"><div class="cat-date">H2 2026</div><div class="cat-text"><strong class="p">LHX</strong> — <span class="c">Missile Solutions IPO.</span> DoD $1B convertible preferred converts to common equity. TARGET ENTRY for remaining LHX position.</div></div>
+    <div class="catalyst-item"><div class="cat-date">H2 2026</div><div class="cat-text"><strong class="p">LHX</strong> — Rocketdyne sale close (60% to AE Industrial Partners). Simplifies portfolio.</div></div>
     <div class="catalyst-item"><div class="cat-date">Q4 2026</div><div class="cat-text"><strong>UUUU</strong> — Commercial heavy REE production target (48 tpa Dy + 14 tpa Tb from Phase 1).</div></div>
     <div class="catalyst-item"><div class="cat-date">Nov 10, 2026</div><div class="cat-text"><strong>ALL</strong> — <span class="r">China rare earth export control suspension expires.</span> Controls could snap back instantly if tensions flare. Sector-wide catalyst.</div></div>
+    <div class="catalyst-item"><div class="cat-date">2027</div><div class="cat-text"><strong class="p">IRDM</strong> — PNT revenue targeting $30-50M run-rate as ASIC chip adoption ramps.</div></div>
+    <div class="catalyst-item"><div class="cat-date">Jan 2027</div><div class="cat-text"><strong class="p">MTRN</strong> — Conasol Korea facility: sample/qualification revenue begins.</div></div>
     <div class="catalyst-item"><div class="cat-date">Mid 2027</div><div class="cat-text"><strong>UUUU</strong> — Phase 2 regulatory approval. Gating item for $410M expansion.</div></div>
+    <div class="catalyst-item"><div class="cat-date">2027</div><div class="cat-text"><strong class="p">LHX</strong> — Post-split re-rating. Market recognizes remaining LHX (SMS + CSD) as higher-margin, higher-quality business.</div></div>
     <div class="catalyst-item"><div class="cat-date">Late 2027</div><div class="cat-text"><strong>UUUU</strong> — Donald Project first production (Australia). 7,200 tpa REE concentrate to White Mesa.</div></div>
+    <div class="catalyst-item"><div class="cat-date">End 2027</div><div class="cat-text"><strong class="p">MTRN</strong> — $65M beryllium capacity expansion complete. New defense production capacity online.</div></div>
     <div class="catalyst-item"><div class="cat-date">2028</div><div class="cat-text"><strong>MP</strong> — 10X Facility commissioned. 10,000 MT/yr magnet capacity. Full DoD offtake begins.</div></div>
     <div class="catalyst-item"><div class="cat-date">Late 2028</div><div class="cat-text"><strong>USAR</strong> — Round Top commercial mining operations begin.</div></div>
     <div class="catalyst-item"><div class="cat-date">Q1 2029</div><div class="cat-text"><strong>UUUU</strong> — Phase 2 Circuit commissioned. 6,000 tpa NdPr + Dy + Tb. The transformation moment.</div></div>
+    <div class="catalyst-item"><div class="cat-date">~2030</div><div class="cat-text"><strong class="p">IRDM</strong> — PNT revenue target $100M/year. NTN Direct scaled. Next-gen constellation planning begins.</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ═══════════ EVENT CALENDAR ═══════════ -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="company-section" id="events-calendar">
+  <h2 class="section-header">Event Calendar</h2>
+  <p class="section-sub">Interactive calendar of all catalyst events across the portfolio. Click any date with events to see details.</p>
+
+  <div class="cal-header">
+    <button class="cal-nav" id="cal-prev">&#8592;</button>
+    <h3 id="cal-month-label"></h3>
+    <button class="cal-nav" id="cal-next">&#8594;</button>
+  </div>
+
+  <div class="cal-grid" id="cal-grid"></div>
+
+  <div class="cal-legend">
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--green);"></div> Earnings</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--amber);"></div> Binary Event</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--accent-2);"></div> Catalyst</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--accent-3);"></div> Macro</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--red);"></div> Deadline</div>
+  </div>
+
+  <div class="cal-detail-panel" id="cal-detail">
+    <h4 id="cal-detail-date"></h4>
+    <div id="cal-detail-events"></div>
+  </div>
+
+  <div class="cal-upcoming">
+    <h4>Upcoming Events</h4>
+    <div id="cal-upcoming-list"></div>
   </div>
 </div>
 
@@ -1215,7 +1445,7 @@ body {
 <!-- ═══════════════════════════════════════════ -->
 <div class="company-section" id="allocation">
   <h2 class="section-header">Portfolio Allocation Strategy</h2>
-  <p class="section-sub">Total rare earth allocation: 15-22% of growth portfolio. Designed for diversification by geography, stage, and value chain.</p>
+  <p class="section-sub">Total allocation across both hunting grounds: 24-36% of growth portfolio. Designed for diversification by geography, stage, value chain, and defense layer.</p>
 
   <div class="two-col">
     <div class="info-block green-glow">
@@ -1231,6 +1461,19 @@ body {
     </div>
   </div>
 
+  <h3 style="font-family:'Playfair Display',serif; font-size:22px; color:var(--accent-3); margin:40px 0 20px;">Hunting Ground #2 — Space & Defense (9-14%)</h3>
+  <div class="two-col">
+    <div class="info-block green-glow">
+      <h4 style="color:var(--green);">🟢 Core Holdings (7-11%)</h4>
+      <p><strong>Iridium (IRDM) — 3-5%</strong><br>Best risk/reward in portfolio. 71% off ATH, 16% FCF yield, PNT monopoly. Buy now aggressively.</p>
+      <p><strong>L3Harris (LHX) — 4-6%</strong><br>Multi-moat defense tech. Scout 1-1.5% now, target full position post Missile Solutions IPO dislocation (H2 2026).</p>
+    </div>
+    <div class="info-block amber-glow">
+      <h4>🟡 Dip Buy (2-3%)</h4>
+      <p><strong>Materion (MTRN) — 2-3%</strong><br>Beryllium monopoly with defense + semiconductor tailwinds. Do NOT buy at current price ($159.68). Set alert at $140. Build at $130-$140.</p>
+    </div>
+  </div>
+
   <div class="info-block" style="margin-top:24px;">
     <h4>🌍 Portfolio Diversification Matrix</h4>
     <div style="overflow-x:auto;">
@@ -1241,15 +1484,15 @@ body {
       </tr>
       <tr>
         <td><strong>Geography</strong></td>
-        <td>US (MP, UUUU, USAR) · Australia (LYSCF, UUUU-Donald) · Malaysia (LYSCF) · South Korea (UUUU-ASM) · UK/France (USAR-LCM)</td>
+        <td>US (MP, UUUU, USAR, IRDM, LHX, MTRN) · Australia (LYSCF, UUUU-Donald) · Malaysia (LYSCF) · South Korea (UUUU-ASM, MTRN-Conasol) · UK/France (USAR-LCM) · Global LEO (IRDM constellation)</td>
       </tr>
       <tr>
         <td><strong>Stage</strong></td>
-        <td>Producing (LYSCF, MP) · Ramping (UUUU, MP-magnets) · Building (USAR, UUUU-Phase2) · Exploring (CRML)</td>
+        <td>Producing (LYSCF, MP, IRDM, LHX, MTRN) · Ramping (UUUU, MP-magnets) · Building (USAR, UUUU-Phase2) · Exploring (CRML)</td>
       </tr>
       <tr>
         <td><strong>Value Chain</strong></td>
-        <td>Mining (all) · Separation (MP, LYSCF, UUUU) · Metals/Alloys (UUUU-ASM, USAR-LCM) · Magnets (MP, USAR) · Recycling (MP-Apple)</td>
+        <td>Mining (RE companies) · Separation (MP, LYSCF, UUUU) · Metals/Alloys (UUUU-ASM, USAR-LCM) · Magnets (MP, USAR) · Recycling (MP-Apple) · Infrastructure (IRDM constellation) · Sensors/Radios/EW (LHX) · Advanced Materials (MTRN beryllium)</td>
       </tr>
       <tr>
         <td><strong>REE Type</strong></td>
@@ -1257,7 +1500,11 @@ body {
       </tr>
       <tr>
         <td><strong>Commodity</strong></td>
-        <td>Rare earths (all) · Uranium (UUUU) · Ilmenite/Zircon (UUUU-Vara Mada) · Bitcoin exposure (CRML, unwanted)</td>
+        <td>Rare earths (RE companies) · Uranium (UUUU) · Ilmenite/Zircon (UUUU-Vara Mada) · Beryllium (MTRN) · Satellite PNT (IRDM) · Defense electronics (LHX)</td>
+      </tr>
+      <tr>
+        <td><strong>Defense Layer</strong></td>
+        <td>Raw Materials (MP, LYSCF, UUUU, MTRN) · Components (USAR magnets) · PNT/Comms (IRDM) · Sensors/Fire Control (LHX HBTSS) · Advanced Materials (MTRN beryllium)</td>
       </tr>
     </table>
     </div>
@@ -1266,6 +1513,411 @@ body {
   <div class="callout info" style="margin-top:24px;">
     <div class="callout-title">Why This Allocation Should Beat the S&P 500</div>
     <p>The rare earth thesis is not cyclical — it's a decade-long structural shift driven by Western decoupling from China. The tailwinds are bipartisan (Biden started DoD investments, Trump accelerated with Project Vault). Defense spending on domestic supply chains will compound regardless of who holds office. Every China escalation/truce cycle increases urgency and funding. The question isn't IF Western supply chains get built — it's which companies execute. This portfolio owns the leaders at every stage.</p>
+  </div>
+
+  <div class="callout info" style="margin-top:16px;">
+    <div class="callout-title">Combined Portfolio: Rare Earth + Space & Defense</div>
+    <p>Total allocation across both hunting grounds: 24-36% of growth portfolio. The rare earth positions (15-22%) provide exposure to the critical materials that physically build defense systems. The space & defense positions (9-14%) provide exposure to the platforms and infrastructure that USE those materials. Together, they form a vertically integrated defense supply chain thesis — from raw materials to finished satellites and sensors. Every dollar of defense spending flows through this portfolio at multiple points.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ═══════════ HUNTING GROUND #2 HERO ═══════════ -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="hero" id="space-defense" style="padding: 60px 0 40px;">
+  <div class="hero-label" style="border-color: rgba(167,139,250,0.3); color: var(--accent-3);"><span class="pulse" style="background:var(--accent-3);"></span> Hunting Ground #2 — Space & Defense Moats</div>
+  <h1 style="font-size:42px;">The <em style="color:var(--accent-3);">Irreplaceable</em> Defense Stack</h1>
+  <p class="sub">Three companies with monopoly or near-monopoly positions in critical defense infrastructure. From the only LEO PNT constellation to the sole Western beryllium producer — these are businesses that cannot be replicated.</p>
+  <div class="meta">
+    <span style="color:var(--accent-3);">3 COMPANIES</span> · Feb 15, 2026 · <span>PORTFOLIO SERIES v1.1</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ═══════════ IRIDIUM COMMUNICATIONS ═══════════ -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="company-section" id="irdm">
+  <div class="company-header">
+    <div class="company-title-group">
+      <div class="company-name">Iridium Communications <span class="tk">NASDAQ: IRDM</span></div>
+      <div class="company-tagline">The Only LEO PNT Constellation — 66 satellites, pole-to-pole coverage, unreplicable $4B+ replacement cost</div>
+    </div>
+    <div class="price-card">
+      <div class="price-label">Price (Feb 12)</div>
+      <div class="price-value" style="color:var(--accent-2);">$18.46</div>
+      <div class="price-meta">52wk: $17.02 – $33.80 · ATH $63.71 (Apr 2023)</div>
+    </div>
+  </div>
+
+  <div class="snap-grid">
+    <div class="snap-cell"><div class="label">Mkt Cap</div><div class="val">$2.24B</div></div>
+    <div class="snap-cell"><div class="label">Revenue TTM</div><div class="val">$802.6M</div></div>
+    <div class="snap-cell"><div class="label">Net Income TTM</div><div class="val" style="color:var(--green);">$42.4M</div></div>
+    <div class="snap-cell"><div class="label">FCF Yield (Pro Forma)</div><div class="val" style="color:var(--green);">~16%</div></div>
+    <div class="snap-cell"><div class="label">Analyst Target</div><div class="val" style="color:var(--green);">$28.33</div></div>
+    <div class="snap-cell"><div class="label">Off ATH</div><div class="val" style="color:var(--red);">-71%</div></div>
+    <div class="snap-cell"><div class="label">Subscribers</div><div class="val">~2.5M</div></div>
+    <div class="snap-cell"><div class="label">Verdict</div><div class="val" style="color:var(--green);">7.5/10</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="info-block green-glow">
+      <h4 style="color:var(--green);">🛰️ The Unreplicable Moat</h4>
+      <p><strong>66 cross-linked LEO satellites</strong> at 780km altitude, complete Earth coverage including poles. No other commercial constellation provides this.</p>
+      <p><strong>$4B+ replacement cost</strong> to replicate. Next-gen Iridium NEXT constellation launched 2017-2019 at $3B+. No competitor willing to spend this for the niche markets Iridium serves.</p>
+      <p><strong>L-Band spectrum rights</strong> — globally allocated, interference-resistant, penetrates buildings and foliage. Cannot be replicated without ITU coordination taking decades.</p>
+      <p><strong>STL (Satellite Time and Location):</strong> Only commercial LEO-based PNT service in operation. Signal 1,000x stronger than GPS. Acquired Satelles (March 2024, $115M).</p>
+      <p><strong>8mm ASIC chip</strong> unveiled Oct 2025, commercial availability mid-2026. Designed to embed Iridium PNT into millions of devices before competitors achieve global coverage.</p>
+      <p><strong>NTN Direct (narrowband):</strong> Smartphone-to-satellite messaging launching H2 2026 via Qualcomm partnership. IoT expansion without new hardware.</p>
+    </div>
+    <div class="info-block amber-glow">
+      <h4>⚠️ Why the Stock Crashed 71%</h4>
+      <p><strong>Wave 1 (Apr-Dec 2023):</strong> Growth re-rating. Market paid 30x+ FCF for a utility-like business growing 3-5%. Multiple compressed to 15x.</p>
+      <p><strong>Wave 2 (2024):</strong> Two guidance cuts. Hosted payload revenue cliff ($80M→$0 by 2028). Management credibility damaged.</p>
+      <p><strong>Wave 3 (Late 2024-2025):</strong> Starlink Direct-to-Cell fear. T-Mobile partnership for broadband from space spooked investors despite being different market (broadband vs. narrowband/IoT).</p>
+      <p><strong>Wave 4 (Feb 2026):</strong> FY2026 guidance of flat-to-2% service revenue growth. Market punished lack of near-term catalysts.</p>
+      <p><strong>$1.6B net debt</strong> from constellation financing. Leverage ~3.8x EBITDA.</p>
+      <p><strong>PNT revenue still early:</strong> ~$10M in 2025. Target $100M/yr by ~2030 but unproven at scale.</p>
+    </div>
+  </div>
+
+  <div class="info-block" style="margin-top:24px;">
+    <h4 style="color:var(--accent-3);">Risk Scorecard</h4>
+    <div class="score-row">
+      <div class="score-label-text">Revenue Visibility</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:80%;"></div></div>
+      <div class="score-val">8/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Competitive Moat</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:95%;"></div></div>
+      <div class="score-val">9.5/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Government/Defense Upside</div>
+      <div class="score-bar-wrap"><div class="score-fill f-amber" style="width:60%;"></div></div>
+      <div class="score-val">6/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Growth Trajectory</div>
+      <div class="score-bar-wrap"><div class="score-fill f-amber" style="width:50%;"></div></div>
+      <div class="score-val">5/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Valuation Attractiveness</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:90%;"></div></div>
+      <div class="score-val">9/10</div>
+    </div>
+  </div>
+
+  <div class="info-block" style="margin-top:24px;">
+    <h4 style="color:var(--amber);">Key Risks</h4>
+    <div class="risk-item"><strong>Starlink perception overhang:</strong> Even though Starlink serves different market (broadband), investor fear persists. Any SpaceX PNT announcement would pressure stock further.</div>
+    <div class="risk-item"><strong>Hosted payload revenue cliff:</strong> Aireon payments declining from $80M toward zero by 2028. Must be replaced by PNT, NTN Direct, and IoT growth.</div>
+    <div class="risk-item"><strong>PNT adoption speed:</strong> ASIC chip commercial mid-2026, but enterprise/government procurement cycles are 12-24 months. Revenue ramp may be slower than bulls expect.</div>
+    <div class="risk-item"><strong>Single constellation risk:</strong> All revenue depends on 66 satellites. No backup constellation. Orbital debris or solar storm event = catastrophic.</div>
+    <div class="risk-item"><strong>Golden Dome uncertainty:</strong> Included in MDA Shield contract (2,440 approved vendors). Probability of meaningful recurring role ($50-100M+ annual): 35-40%. Not primary thesis.</div>
+  </div>
+
+  <div class="callout success" style="margin-top:24px;">
+    <div class="callout-title">✓ FCF Machine at Distressed Pricing</div>
+    <p>At $18.46, you're buying $802M revenue, ~$370M EBITDA, and ~16% pro forma FCF yield. The constellation is fully paid for. CapEx is minimal until next-gen planning (~2030). This is a cash-generating monopoly priced like a distressed asset. The PNT business ($100M/yr target by 2030) is essentially free optionality at this price.</p>
+  </div>
+
+  <div class="verdict-block">
+    <h3>Verdict — CONVICTION BUY · Core Position (3-5%)</h3>
+    <p>Unreplicable 66-satellite LEO constellation generating $800M+ revenue at 16% FCF yield. PNT monopoly (only operational LEO PNT service globally) with ASIC chip launching mid-2026. Stock down 71% from ATH on growth fears — but the moat hasn't shrunk, only the multiple. At $18.46, you're paying distressed pricing for a monopoly asset with $100M/yr PNT optionality and NTN Direct catalyst H2 2026. <strong>Best risk/reward in the portfolio.</strong></p>
+    <p style="margin-top:12px; font-size:13px; color:var(--text-dim);">Next catalyst: NTN Direct launch H2 2026 + ASIC chip commercial availability mid-2026.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ═══════════ L3HARRIS TECHNOLOGIES ═══════════ -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="company-section" id="lhx">
+  <div class="company-header">
+    <div class="company-title-group">
+      <div class="company-name">L3Harris Technologies <span class="tk">NYSE: LHX</span></div>
+      <div class="company-tagline">The Eyes of Golden Dome — Only proven HBTSS sensor, dominant tactical radios, 25% CSD margins</div>
+    </div>
+    <div class="price-card">
+      <div class="price-label">Price (Feb 12)</div>
+      <div class="price-value" style="color:var(--accent-2);">$339.90</div>
+      <div class="price-meta">52wk: $193.09 – $369.59</div>
+    </div>
+  </div>
+
+  <div class="snap-grid">
+    <div class="snap-cell"><div class="label">Mkt Cap</div><div class="val">$65.8B</div></div>
+    <div class="snap-cell"><div class="label">Revenue FY2025</div><div class="val">$21.9B</div></div>
+    <div class="snap-cell"><div class="label">Backlog</div><div class="val" style="color:var(--green);">$38B+</div></div>
+    <div class="snap-cell"><div class="label">Book-to-Bill</div><div class="val" style="color:var(--green);">1.3x</div></div>
+    <div class="snap-cell"><div class="label">Analyst Target</div><div class="val">$382</div></div>
+    <div class="snap-cell"><div class="label">Segments</div><div class="val" style="font-size:12px;">SMS $11.5B · CSD $8B · MSL $4.4B</div></div>
+    <div class="snap-cell"><div class="label">2025 Return</div><div class="val" style="color:var(--green);">+72%</div></div>
+    <div class="snap-cell"><div class="label">Verdict</div><div class="val" style="color:var(--green);">7.0/10</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="info-block green-glow">
+      <h4 style="color:var(--green);">🛡️ The Multi-Moat Defense Stack</h4>
+      <p><strong>HBTSS Sensor Monopoly:</strong> Only proven fire-control-quality missile tracking sensor from space. In head-to-head MDA test, only L3Harris satellite met performance requirements (Northrop Grumman failed). Positions LHX as primary Golden Dome sensor supplier.</p>
+      <p><strong>SDA Tracking Layer:</strong> Awarded contracts across ALL four tranches (T0→T3). 56+ satellites contracted totaling ~$3.5B+. T3 alone: $843M for 18 satellites (Dec 2025).</p>
+      <p><strong>Tactical Radio Dominance:</strong> CSD segment ~$8B revenue at ~25% operating margin. NATO standard software-defined radios with massive installed-base switching costs. International demand accelerating.</p>
+      <p><strong>Electronic Warfare:</strong> Decades of classified threat libraries and institutional knowledge. Cannot be replicated with money alone.</p>
+      <p><strong>Special Mission Aircraft:</strong> $2B+ international order (Q1 2026 booking). Classified ISR platform conversions.</p>
+      <p><strong>Night Vision:</strong> One of two dominant global suppliers (with Elbit). GPNVG-18 used by Tier 1 special operations.</p>
+    </div>
+    <div class="info-block amber-glow">
+      <h4>⚠️ The Three-Way Split Complexity</h4>
+      <p><strong>Missile Solutions IPO (H2 2026):</strong> Solid rocket motor duopoly being taken public. DoD investing $1B convertible preferred. L3Harris retains majority. Creates 3-6 month dislocation opportunity.</p>
+      <p><strong>Rocketdyne Sale:</strong> 60% stake to AE Industrial Partners ($845M for 100%). RS-25 engine stays with Missile Solutions, NOT Rocketdyne. LHX retains ~40%.</p>
+      <p><strong>Post-split remaining LHX:</strong> Pure SMS + CSD = sensors + radios + EW. Higher margins (~20%+ blended vs 15% combined). But market may initially undervalue as "leftover."</p>
+      <p><strong>Valuation stretched near-term:</strong> $340 after 72% run. JPMorgan target $395, Morgan Stanley $390, but average analyst target ~$382. Limited near-term upside at current price.</p>
+      <p><strong>Revenue miss risk:</strong> Q4 2025 missed revenue estimates due to government shutdown. 2026 guidance of $23-$23.5B includes Rocketdyne (pre-close).</p>
+    </div>
+  </div>
+
+  <div class="info-block" style="margin-top:24px;">
+    <h4 style="color:var(--accent-3);">Risk Scorecard</h4>
+    <div class="score-row">
+      <div class="score-label-text">Revenue Visibility</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:90%;"></div></div>
+      <div class="score-val">9/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Competitive Moat</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:90%;"></div></div>
+      <div class="score-val">9/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Golden Dome Exposure</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:85%;"></div></div>
+      <div class="score-val">8.5/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Growth Trajectory</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:70%;"></div></div>
+      <div class="score-val">7/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Valuation Attractiveness</div>
+      <div class="score-bar-wrap"><div class="score-fill f-amber" style="width:45%;"></div></div>
+      <div class="score-val">4.5/10</div>
+    </div>
+  </div>
+
+  <div class="info-block" style="margin-top:24px;">
+    <h4 style="color:var(--amber);">Key Risks</h4>
+    <div class="risk-item"><strong>Post-IPO mechanical selling:</strong> Index rebalancing + confused investors = temporary pressure on remaining LHX after Missile Solutions IPO. 3-6 month dislocation window.</div>
+    <div class="risk-item"><strong>Government shutdown sensitivity:</strong> Delayed contract awards impacted Q4 2025. Further shutdowns = revenue timing risk.</div>
+    <div class="risk-item"><strong>Missile Solutions execution:</strong> IPO pricing, market reception, and clean separation all carry execution risk.</div>
+    <div class="risk-item"><strong>Golden Dome program risk:</strong> $175B-$3.6T cost estimates. Political/budget uncertainty. Could be descoped.</div>
+    <div class="risk-item"><strong>Conglomerate discount persistence:</strong> Even after split, SMS + CSD may take 6-12 months for market to properly re-rate.</div>
+  </div>
+
+  <div class="callout info" style="margin-top:24px;">
+    <div class="callout-title">📋 Staged Entry Strategy</div>
+    <p>Don't go all-in at $340 after a 72% run. Recommended approach: Scout position now (1-1.5%) → Watch Investor Day Feb 25 → Evaluate Q1 earnings Apr 23 → TARGET ENTRY: Post Missile Solutions IPO dip (H2 2026) when mechanical selling creates dislocation. Full position 4-6% at $300-$320 post-split.</p>
+  </div>
+
+  <div class="verdict-block">
+    <h3>Verdict — STAGED BUY · Build to Core Position (4-6%)</h3>
+    <p>Multi-moat defense tech company with the only proven HBTSS missile tracking sensor, dominant 25%-margin tactical radio franchise, and $38B record backlog. The remaining LHX after Missile Solutions IPO (pure sensors + radios + EW) may be the better long-term hold than the combined entity. <strong>Scout 1-1.5% now, target full position at post-IPO dislocation.</strong> Investor Day Feb 25 is the next major catalyst.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ═══════════ MATERION CORPORATION ═══════════ -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="company-section" id="mtrn">
+  <div class="company-header">
+    <div class="company-title-group">
+      <div class="company-name">Materion Corporation <span class="tk">NYSE: MTRN</span></div>
+      <div class="company-tagline">Western Beryllium Monopoly — Only producer of the irreplaceable defense material. 100+ years of expertise.</div>
+    </div>
+    <div class="price-card">
+      <div class="price-label">Price (Feb 13)</div>
+      <div class="price-value" style="color:var(--amber);">$159.68</div>
+      <div class="price-meta">52wk: $68.81 – $172.03 · ATH $172.03</div>
+    </div>
+  </div>
+
+  <div class="snap-grid">
+    <div class="snap-cell"><div class="label">Mkt Cap</div><div class="val">$3.31B</div></div>
+    <div class="snap-cell"><div class="label">Revenue TTM</div><div class="val">$1.79B</div></div>
+    <div class="snap-cell"><div class="label">Adj EPS 2025</div><div class="val">$5.44</div></div>
+    <div class="snap-cell"><div class="label">FY2026 EPS Guide</div><div class="val" style="color:var(--green);">$6.00-$6.50</div></div>
+    <div class="snap-cell"><div class="label">Forward P/E</div><div class="val" style="color:var(--amber);">25.6x</div></div>
+    <div class="snap-cell"><div class="label">IB Fair Value</div><div class="val" style="color:var(--red);">$131.52</div></div>
+    <div class="snap-cell"><div class="label">2025 Return</div><div class="val" style="color:var(--green);">+132%</div></div>
+    <div class="snap-cell"><div class="label">Verdict</div><div class="val" style="color:var(--amber);">6.5/10</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="info-block green-glow">
+      <h4 style="color:var(--green);">⚗️ The Beryllium Monopoly</h4>
+      <p><strong>Only Western beryllium producer.</strong> No substitute exists for beryllium in many defense applications — missile guidance systems, satellite structures, nuclear weapons components, fighter jet landing gear, precision optics.</p>
+      <p><strong>$65M defense prime investment</strong> (announced Feb 12, 2026) to expand beryllium capacity. A defense prime investing their own capital into a supplier's expansion = they cannot source this material anywhere else.</p>
+      <p><strong>Defense: $100M+ sales</strong> for second consecutive year. 10% CAGR since 2020. Record new business bookings of $140M with $200M pipeline of RFQs.</p>
+      <p><strong>Semiconductor exposure:</strong> Electronic Materials segment (largest by revenue) supplies vapor deposition targets and packaging materials for chip fabrication. AI/HPC demand driver.</p>
+      <p><strong>Fusion energy optionality:</strong> Multiyear supply agreement with Commonwealth Fusion Systems for beryllium fluoride. Energy business more than doubled YoY.</p>
+      <p><strong>Precision Optics transformation:</strong> Thin film coatings for satellite sensors, scientific instruments, defense systems. Reached 15%+ EBITDA margins, ahead of expectations.</p>
+    </div>
+    <div class="info-block red-glow">
+      <h4 style="color:var(--red);">🚨 Valuation Warning</h4>
+      <p><strong>Trading at ATH after 132% run.</strong> $172.03 high hit on earnings day. Now $159.68 — still well above IB fair value of $131.52.</p>
+      <p><strong>Forward P/E of 25.6x</strong> is rich for specialty materials. Typical peer group: 15-20x. PEG ratio 2.35 confirms overvaluation.</p>
+      <p><strong>GAAP P/E of 44.6x</strong> distorted by precision clad strip quality event write-downs.</p>
+      <p><strong>Only 4 analysts cover this stock.</strong> Thin coverage = volatile price discovery. Average target $178 but was $151 just days ago.</p>
+      <p><strong>Quality event risk:</strong> Precision Clad Strip process control failure in 2025 led to temporary production halt. Resolved but raises questions about process controls.</p>
+      <p><strong>Morningstar: 294% premium to fair value.</strong> Even accounting for conservative models, this is extreme.</p>
+      <p><strong>Net margin only 4.2%.</strong> High revenue but thin profitability relative to market cap.</p>
+    </div>
+  </div>
+
+  <div class="info-block" style="margin-top:24px;">
+    <h4 style="color:var(--accent-3);">Risk Scorecard</h4>
+    <div class="score-row">
+      <div class="score-label-text">Revenue Visibility</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:70%;"></div></div>
+      <div class="score-val">7/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Competitive Moat (Beryllium)</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:95%;"></div></div>
+      <div class="score-val">9.5/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Growth Trajectory</div>
+      <div class="score-bar-wrap"><div class="score-fill f-green" style="width:70%;"></div></div>
+      <div class="score-val">7/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Valuation Attractiveness</div>
+      <div class="score-bar-wrap"><div class="score-fill f-red" style="width:30%;"></div></div>
+      <div class="score-val">3/10</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label-text">Execution Risk</div>
+      <div class="score-bar-wrap"><div class="score-fill f-cyan" style="width:60%;"></div></div>
+      <div class="score-val">6/10</div>
+    </div>
+  </div>
+
+  <div class="info-block" style="margin-top:24px;">
+    <h4 style="color:var(--amber);">Key Risks</h4>
+    <div class="risk-item"><strong>Buying at ATH after 132% rally.</strong> Worst possible entry timing for a specialty materials company.</div>
+    <div class="risk-item"><strong>21% premium to IB fair value ($131.52).</strong> Paying full price for future growth already priced in.</div>
+    <div class="risk-item"><strong>Thin analyst coverage (4 analysts).</strong> Price discovery is volatile. Post-earnings upgrades may be momentum-driven.</div>
+    <div class="risk-item"><strong>Quality event recurrence.</strong> Precision Clad Strip failure suggests process control gaps. Another event = significant selloff.</div>
+    <div class="risk-item"><strong>Semiconductor cyclicality.</strong> Electronic Materials segment tied to chip fab spending cycles. AI demand may plateau.</div>
+    <div class="risk-item"><strong>Strategic reserve classification unknown.</strong> CEO couldn't discuss beryllium strategic reserve status — could be positive or could mean nothing.</div>
+  </div>
+
+  <div class="callout danger" style="margin-top:24px;">
+    <div class="callout-title">⚠ Do NOT Chase This at ATH</div>
+    <p>IB fair value: $131.52. Current price: $159.68 (21% premium). The moat is real — beryllium monopoly with defense tailwinds. But the entry price is wrong. Wait for pullback to $130-$140 range (gap fill + 50-day MA test). At that level, you're paying ~21x forward earnings for a monopolist with 15% growth — that's fair. At $160+, you're overpaying.</p>
+  </div>
+
+  <div class="verdict-block">
+    <h3>Verdict — BUY ON DIP · Target Entry $130-$140 (2-3%)</h3>
+    <p>Genuine beryllium monopoly with irreplaceable defense positioning, semiconductor exposure, and fusion energy optionality. The $65M defense prime investment validates the moat. But at $159.68 (21% above IB fair value of $131.52), you're paying for perfection. <strong>Set price alert at $140. Build position at $130-$140.</strong> The moat isn't going anywhere — only the price needs to cooperate. Next catalyst: Beryllium capacity expansion completion (end 2027).</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ═══════════ SPACE & DEFENSE HEAD-TO-HEAD ═══════════ -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="company-section" id="head2head-space">
+  <h2 class="section-header">Space & Defense — Head-to-Head</h2>
+  <p class="section-sub">All three Hunting Ground #2 positions across critical investment dimensions.</p>
+
+  <div style="overflow-x:auto;">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th style="min-width:160px;">Factor</th>
+        <th>Iridium (IRDM)</th>
+        <th>L3Harris (LHX)</th>
+        <th>Materion (MTRN)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Moat Type</strong></td>
+        <td class="c">Infrastructure monopoly</td>
+        <td class="g">Multi-moat (sensors + radios + EW)</td>
+        <td class="g">Material monopoly (beryllium)</td>
+      </tr>
+      <tr>
+        <td><strong>Revenue</strong></td>
+        <td class="mono">$802.6M</td>
+        <td class="mono">$21.9B</td>
+        <td class="mono">$1.79B</td>
+      </tr>
+      <tr>
+        <td><strong>Profitability</strong></td>
+        <td class="g">✓ FCF positive, 16% yield</td>
+        <td class="g">✓ $2.65B FCF FY25</td>
+        <td class="g">✓ Adj EPS $5.44</td>
+      </tr>
+      <tr>
+        <td><strong>Defense Revenue</strong></td>
+        <td class="a">Growing (PNT + Golden Dome)</td>
+        <td class="g">~80%+ defense</td>
+        <td class="g">$100M+ defense, 10% CAGR</td>
+      </tr>
+      <tr>
+        <td><strong>Golden Dome Exposure</strong></td>
+        <td class="a">Indirect — PNT/comms layer</td>
+        <td class="g">Direct — sensor layer (HBTSS)</td>
+        <td class="a">Indirect — materials supplier</td>
+      </tr>
+      <tr>
+        <td><strong>Rare Earth Connection</strong></td>
+        <td class="a">Satellite components use NdFeB magnets</td>
+        <td class="a">Satellite + missile systems use magnets</td>
+        <td class="g">Beryllium alloys complement REE applications</td>
+      </tr>
+      <tr>
+        <td><strong>Semiconductor Exposure</strong></td>
+        <td class="r">✗ None</td>
+        <td class="r">✗ Minimal</td>
+        <td class="g">✓ Largest segment (Electronic Materials)</td>
+      </tr>
+      <tr>
+        <td><strong>Current Valuation</strong></td>
+        <td class="g">Attractive — 16% FCF yield</td>
+        <td class="a">Fair — near analyst targets</td>
+        <td class="r">Expensive — 21% above fair value</td>
+      </tr>
+      <tr>
+        <td><strong>Entry Timing</strong></td>
+        <td class="g">NOW — at 71% discount to ATH</td>
+        <td class="a">STAGED — scout now, load post-IPO</td>
+        <td class="r">WAIT — target $130-$140</td>
+      </tr>
+      <tr>
+        <td><strong>Catalyst Timeline</strong></td>
+        <td class="a">H2 2026 (NTN Direct + ASIC)</td>
+        <td class="a">H2 2026 (Missile Solutions IPO)</td>
+        <td class="r">End 2027 (beryllium capacity online)</td>
+      </tr>
+      <tr>
+        <td><strong>Position Size</strong></td>
+        <td class="g">3-5%</td>
+        <td class="g">4-6% (staged)</td>
+        <td class="a">2-3% (on dip)</td>
+      </tr>
+      <tr>
+        <td><strong>Overall Score</strong></td>
+        <td class="mono g"><strong>7.5/10</strong></td>
+        <td class="mono g"><strong>7.0/10</strong></td>
+        <td class="mono a"><strong>6.5/10</strong></td>
+      </tr>
+    </tbody>
+  </table>
   </div>
 </div>
 
@@ -1280,20 +1932,20 @@ body {
   </div>
   <div class="empty-slot" style="opacity:0.6;">
     <div class="icon">+</div>
-    <h3>Hunting Ground #2 — Robotics</h3>
-    <p>Placeholder for future robotics company deep dives. The permanent magnets these companies produce are the critical input for electric motors powering the robotics revolution.</p>
+    <h3>Hunting Ground #3 — Robotics</h3>
+    <p>Placeholder for future robotics company deep dives. The permanent magnets from Hunting Ground #1 and beryllium composites from Hunting Ground #2 are critical inputs for robotic actuators and precision components.</p>
   </div>
   <div class="empty-slot" style="opacity:0.4;">
     <div class="icon">+</div>
-    <h3>Hunting Ground #3 — Tech / AI</h3>
-    <p>Placeholder for future tech company deep dives. The supply chain we're building here feeds directly into AI hardware, autonomous vehicles, and defense systems.</p>
+    <h3>Hunting Ground #4 — Tech / AI</h3>
+    <p>Placeholder for future tech company deep dives. AI hardware, autonomous vehicles, and software-defined defense systems that consume the materials and infrastructure in this portfolio.</p>
   </div>
 </div>
 
 <!-- ═══════════ FOOTER ═══════════ -->
 <div class="footer">
-  <p>Rare Earth Supply Chain Master Report — Growth Portfolio Series v1.0</p>
-  <p>Analysis prepared February 8, 2026</p>
+  <p>Growth Portfolio Master Report — Portfolio Series v1.1</p>
+  <p>Analysis prepared February 15, 2026</p>
   <p style="margin-top:6px;">Sources: SEC filings, ASX announcements, CSIS, Critical Threats, Reuters, Bloomberg, company investor presentations, Alpha Vantage</p>
   <p class="warn">⚠ This is research analysis, not financial advice. Consult a licensed financial advisor before making investment decisions.</p>
   <p style="margin-top:12px; font-size:11px;">Report structure designed to accommodate additional companies as portfolio grows.</p>
@@ -1301,6 +1953,199 @@ body {
 
 </div><!-- end container -->
 </div><!-- end report-content -->
+
+<script>
+// ═══════════ EVENT CALENDAR ═══════════
+(function() {
+  var calEvents = [
+    { date:'2026-02-12', company:'USAR', type:'catalyst', color:'cyan', title:'Analyst & Investor Webinar', desc:'Stillwater commissioning update.' },
+    { date:'2026-02-12', company:'MTRN', type:'earnings', color:'green', title:'Q4/FY2025 Earnings \u2713', desc:'REPORTED: Revenue beat ($489.7M vs $448.8M est). EPS miss ($1.53 vs $1.60). $65M defense prime beryllium investment.' },
+    { date:'2026-02-19', company:'MP', type:'earnings', color:'green', title:'Q4/FY2025 Earnings', desc:'Expect first profitable quarter as price floor payments commence. Magnetics segment revenue ramp.' },
+    { date:'2026-02-19', company:'MTRN', type:'deadline', color:'red', title:'Ex-Dividend Date', desc:'$0.14/share quarterly dividend.' },
+    { date:'2026-02-25', company:'UUUU', type:'earnings', color:'green', title:'Q4/FY2025 Earnings', desc:'Uranium production update, Vara Mada status, heavy REE pilot progress.' },
+    { date:'2026-02-25', company:'CRML', type:'earnings', color:'green', title:'Earnings', desc:'Tanbreez pilot plant progress, DFS status.' },
+    { date:'2026-02-25', company:'USAR', type:'earnings', color:'green', title:'Q4/FY2025 Earnings', desc:'Stillwater commissioning progress report.' },
+    { date:'2026-02-25', company:'LHX', type:'catalyst', color:'cyan', title:'Investor Day', desc:'NYC. First detailed 3-segment presentation. Missile Solutions IPO timeline. Golden Dome strategy.' },
+    { date:'2026-03-02', company:'LYSCF', type:'binary', color:'amber', title:'Malaysia Licence Renewal', desc:'Kuantan licence renewal decision. Binary event.' },
+    { date:'2026-03-04', company:'LYSCF', type:'earnings', color:'green', title:'Half-Year Results', desc:'Updated guidance + new CEO strategy direction.' },
+    { date:'2026-03-06', company:'MTRN', type:'deadline', color:'red', title:'Dividend Payment', desc:'$0.14/share quarterly dividend paid.' },
+    { date:'2026-03-31', company:'USAR', type:'binary', color:'amber', title:'Commerce LOI Deadline', desc:'Non-binding \u2192 binding. If falls through, thesis collapses.' },
+    { date:'2026-04-23', company:'LHX', type:'earnings', color:'green', title:'Q1 2026 Earnings', desc:'First quarter under new 3-segment reporting. Key for margin visibility.' },
+    { date:'2026-06-15', company:'IRDM', type:'catalyst', color:'cyan', title:'ASIC Chip Commercial Launch', desc:'8mm PNT chip commercial availability. Mass-market device integration begins.' },
+    { date:'2026-06-30', company:'UUUU', type:'catalyst', color:'cyan', title:'ASM Acquisition Close', desc:'Shareholder vote, FIRB approval. 5.8% dilution.' },
+    { date:'2026-09-01', company:'IRDM', type:'catalyst', color:'cyan', title:'NTN Direct Launch', desc:'Narrowband smartphone-to-satellite via Qualcomm. IoT expansion.' },
+    { date:'2026-09-15', company:'LHX', type:'catalyst', color:'cyan', title:'Missile Solutions IPO (est.)', desc:'H2 2026. DoD $1B preferred converts. TARGET ENTRY for remaining LHX position.' },
+    { date:'2026-11-10', company:'ALL', type:'macro', color:'purple', title:'China RE Export Control Expiry', desc:'Suspension expires. Controls could snap back instantly. Sector-wide catalyst.' },
+    { date:'2027-01-15', company:'MTRN', type:'catalyst', color:'cyan', title:'Conasol Korea Revenue Start', desc:'Sample/qualification revenue from Korean facility.' },
+    { date:'2027-12-01', company:'MTRN', type:'catalyst', color:'cyan', title:'Beryllium Capacity Online', desc:'$65M expansion complete. New defense production capacity.' }
+  ];
+
+  var currentYear = 2026;
+  var currentMonth = 1; // 0-indexed, 1 = February
+  var selectedDate = null;
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  function getEventsForDate(y, m, d) {
+    var dateStr = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    return calEvents.filter(function(e) { return e.date === dateStr; });
+  }
+
+  function renderCalendar() {
+    var grid = document.getElementById('cal-grid');
+    var label = document.getElementById('cal-month-label');
+    if (!grid || !label) return;
+
+    label.textContent = months[currentMonth] + ' ' + currentYear;
+    grid.innerHTML = '';
+
+    // Day headers
+    for (var i = 0; i < 7; i++) {
+      var dh = document.createElement('div');
+      dh.className = 'cal-day-header';
+      dh.textContent = days[i];
+      grid.appendChild(dh);
+    }
+
+    var firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    // Convert Sunday=0 to Monday-based: Mon=0, Tue=1, ..., Sun=6
+    var startOffset = (firstDay === 0) ? 6 : firstDay - 1;
+    var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    // Empty cells before first day
+    for (var e = 0; e < startOffset; e++) {
+      var empty = document.createElement('div');
+      empty.className = 'cal-cell empty';
+      grid.appendChild(empty);
+    }
+
+    // Day cells
+    for (var d = 1; d <= daysInMonth; d++) {
+      var cell = document.createElement('div');
+      cell.className = 'cal-cell';
+      var dayNum = document.createElement('div');
+      dayNum.className = 'day-num';
+      dayNum.textContent = d;
+      cell.appendChild(dayNum);
+
+      var evts = getEventsForDate(currentYear, currentMonth, d);
+      if (evts.length > 0) {
+        cell.classList.add('has-events');
+        var dots = document.createElement('div');
+        dots.className = 'cal-dots';
+        var seenColors = {};
+        for (var ei = 0; ei < evts.length; ei++) {
+          var c = evts[ei].color;
+          if (!seenColors[c]) {
+            seenColors[c] = true;
+            var dot = document.createElement('div');
+            dot.className = 'cal-dot dot-' + c;
+            dots.appendChild(dot);
+          }
+        }
+        cell.appendChild(dots);
+
+        (function(day) {
+          cell.addEventListener('click', function() {
+            selectedDate = day;
+            showEventDetail(currentYear, currentMonth, day);
+            // Update selected state
+            var cells = grid.querySelectorAll('.cal-cell');
+            for (var ci = 0; ci < cells.length; ci++) cells[ci].classList.remove('selected');
+            this.classList.add('selected');
+          });
+        })(d);
+      }
+
+      // Check if today
+      var today = new Date();
+      if (currentYear === today.getFullYear() && currentMonth === today.getMonth() && d === today.getDate()) {
+        cell.classList.add('today');
+      }
+
+      grid.appendChild(cell);
+    }
+
+    renderUpcoming();
+  }
+
+  function showEventDetail(y, m, d) {
+    var panel = document.getElementById('cal-detail');
+    var dateLabel = document.getElementById('cal-detail-date');
+    var eventsDiv = document.getElementById('cal-detail-events');
+    var evts = getEventsForDate(y, m, d);
+
+    if (evts.length === 0) {
+      panel.classList.remove('visible');
+      return;
+    }
+
+    dateLabel.textContent = months[m] + ' ' + d + ', ' + y;
+    eventsDiv.innerHTML = '';
+    for (var i = 0; i < evts.length; i++) {
+      var item = document.createElement('div');
+      item.className = 'cal-event-item';
+      var colorVar = evts[i].color === 'green' ? 'var(--green)' :
+                     evts[i].color === 'amber' ? 'var(--amber)' :
+                     evts[i].color === 'cyan' ? 'var(--accent-2)' :
+                     evts[i].color === 'purple' ? 'var(--accent-3)' : 'var(--red)';
+      item.innerHTML = '<div><span class="ev-company" style="color:' + colorVar + ';">' + evts[i].company + '</span><span class="ev-title">' + evts[i].title + '</span></div><div class="ev-desc">' + evts[i].desc + '</div>';
+      eventsDiv.appendChild(item);
+    }
+    panel.classList.add('visible');
+  }
+
+  function renderUpcoming() {
+    var list = document.getElementById('cal-upcoming-list');
+    if (!list) return;
+
+    var now = new Date(2026, 1, 15); // Feb 15, 2026
+    var upcoming = calEvents.filter(function(e) {
+      return new Date(e.date) >= now;
+    }).sort(function(a, b) {
+      return new Date(a.date) - new Date(b.date);
+    }).slice(0, 5);
+
+    list.innerHTML = '';
+    for (var i = 0; i < upcoming.length; i++) {
+      var ev = upcoming[i];
+      var d = new Date(ev.date);
+      var dateStr = months[d.getMonth()].substring(0, 3) + ' ' + d.getDate();
+      var item = document.createElement('div');
+      item.className = 'cal-upcoming-item';
+      item.innerHTML = '<div class="cal-upcoming-date">' + dateStr + '</div><div class="cal-upcoming-text"><strong>' + ev.company + '</strong> — ' + ev.title + '. ' + ev.desc + '</div>';
+      list.appendChild(item);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  function init() {
+    renderCalendar();
+    var prev = document.getElementById('cal-prev');
+    var next = document.getElementById('cal-next');
+    if (prev) prev.addEventListener('click', function() {
+      currentMonth--;
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      selectedDate = null;
+      document.getElementById('cal-detail').classList.remove('visible');
+      renderCalendar();
+    });
+    if (next) next.addEventListener('click', function() {
+      currentMonth++;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      selectedDate = null;
+      document.getElementById('cal-detail').classList.remove('visible');
+      renderCalendar();
+    });
+  }
+})();
+</script>
 
 <script>
 const HASH = 'a1681788ac8fa21752e1ccbc97632e509a68e0d8b26b5de9d5be06789b214106';
